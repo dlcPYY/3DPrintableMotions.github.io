@@ -1,0 +1,111 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<script type="text/javascript">
+/*
+作者：Ryan.Sun
+日期：2011/04/24
+用途：跨浏览器动态生成单选框，不依赖外部框架，支持添加自定义的点击事件回调
+历史：
+2011/04/24  完成基本功能代码并在IE6、IE9、FF和Chrome测试通过
+2011/04/25  增加选中状态赋值
+2011/04/26  优化实现同时增加测试用例
+*/
+
+function addRadioButton(radio){
+    //校验参数
+    if(radio.element == null || 
+        radio.name == null || 
+        radio.value == null || 
+        (radio.onclick != null && typeof radio.onclick != "function")){
+        throw new Error("ErrorArgument");
+    }
+    
+    var options = {
+        element : radio.element,
+        name : radio.name,
+        id : radio.id == null ? "": radio.id,
+        value : radio.value,
+        checked : radio.checked == null || !radio.checked ? false : true,
+        onclick : radio.onclick == null ? function(){} : radio.onclick,
+        css : radio.css == null ? "" : radio.css
+    };
+    //声明内部函数
+    function addEvent(obj,type,fn){
+        if(obj.addEventListener) obj.addEventListener(type,fn,false);
+        else if(obj.attachEvent){
+            obj["e"+type+fn]=fn;
+            obj[type+fn]=function(){obj["e"+type+fn](window.event);}
+            obj.attachEvent("on"+type,obj[type+fn]);
+        }
+    }
+    //动态生成单选框
+    var strInput = "";
+    if(navigator.userAgent.indexOf("MSIE 6.0")>0) {
+        //Tip: IE6下单选框的name属性为只读，需要这样动态构建单选框
+        strInput = "<input name='" + options.name + "'>";
+    }
+    else{
+        strInput = "input";
+    }
+    var op = document.createElement(strInput);
+    op.type = "radio";
+    op.name = options.name;
+    op.id = options.id;
+    op.value = options.value;
+    op.className = options.css;
+    
+    addEvent(op,"click",function(){
+        options.onclick.call(this);
+    });
+    
+    //添加到DOM树
+    radio.element.appendChild(op);
+    
+    //设置选中
+    //Tip: IE6下需要在单选框添加到DOM树后设置选中状态
+    op.checked = options.checked;
+}
+
+//测试方法
+function Add(){
+    var region = document.getElementById("add");
+
+    addRadioButton({
+        element : region,
+        name : "new",
+        id : "new",
+        value : 0,
+        checked : false,
+        onclick : function(){
+            alert(this.value);
+        }
+    });
+    
+    addRadioButton({
+        element : region,
+        name : "new",
+        id : "new",
+        value : 1,
+        checked : true,
+        onclick : function(){
+            alert(this.value);
+        }
+    });
+    
+    
+}
+</script>
+<style type="text/css">
+.test{
+    background: yellow;
+}
+</style>
+</head>
+<body>
+<input type="button" name="btnAddRadio" id="btnAddRadio" value="AddRadio" onclick="Add()"/>
+<div id="add">
+    
+</div>
+</body>
+</html>

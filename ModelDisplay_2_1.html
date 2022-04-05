@@ -1,72 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<title>3D Printable Motions</title>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-		<link type="text/css" rel="stylesheet" href="main.css">
-		<style>
-			* {
-				box-sizing: border-box;
-				-moz-box-sizing: border-box;
-			}
 
-			body {
-				background-color: #fff;
-				color: #444;
-			}
+<head>
+	<title>3D Printable Motions</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<link type="text/css" rel="stylesheet" href="main.css">
+	<style>
+		* {
+			box-sizing: border-box;
+			-moz-box-sizing: border-box;
+		}
 
-			a {
-				color: #08f;
-			}
+		body {
+			background-color: #fff;
+			color: #444;
+		}
 
-			#content {
-				position: absolute;
-				top: 0; width: 100%;
-				z-index: 1;
-				padding: 3em 0 0 0;
-			}
+		a {
+			color: #08f;
+		}
 
-			#c {
-				position: absolute;
-				left: 0;
-				width: 100%;
-				height: 100%;
-			}
+		#content {
+			position: absolute;
+			top: 0;
+			width: 100%;
+			z-index: 1;
+			padding: 3em 0 0 0;
+		}
 
-			.list-item {
-				display: inline-block;
-				margin: 1em;
-				padding: 1em;
-				box-shadow: 1px 2px 4px 0px rgba(0,0,0,0.25);
-			}
+		#c {
+			position: absolute;
+			left: 0;
+			width: 100%;
+			height: 100%;
+		}
 
-			.list-item > div:nth-child(1) {
-				width: 200px;
-				height: 200px;
-			}
+		.list-item {
+			display: inline-block;
+			margin: 1em;
+			padding: 1em;
+			box-shadow: 1px 2px 4px 0px rgba(0, 0, 0, 0.25);
+		}
 
-			.list-item > div:nth-child(2) {
-				color: #888;
-				font-family: sans-serif;
-				font-size: large;
-				width: 200px;
-				margin-top: 0.5em;
-			}
-		</style>
-	</head>
-	<body>
+		.list-item>div:nth-child(1) {
+			width: 200px;
+			height: 200px;
+		}
 
-		<canvas id="c"></canvas>
+		.list-item>div:nth-child(2) {
+			color: #888;
+			font-family: sans-serif;
+			font-size: large;
+			width: 200px;
+			margin-top: 0.5em;
+		}
+	</style>
+</head>
 
-		<div id="content">
-			<div id="info"> Model:2 Cloth:1</div>
-		</div>
-		
+<body>
 
-		<!-- Import maps polyfill -->
-		<!-- Remove this when import maps will be widely supported -->
-		<!-- <script async src="https://unpkg.com/es-module-shims@1.3.6/dist/es-module-shims.js"></script>
+	<canvas id="c"></canvas>
+
+	<div id="content">
+		<div id="info"> Model:2 Cloth:1</div>
+	</div>
+
+
+	<!-- Import maps polyfill -->
+	<!-- Remove this when import maps will be widely supported -->
+	<!-- <script async src="https://unpkg.com/es-module-shims@1.3.6/dist/es-module-shims.js"></script>
 
 		<script type="importmap">
 			{
@@ -76,64 +79,65 @@
 			}
 		</script> -->
 
-		<script src="./js/three.js"></script>
-		<script src="./js/Detector.js"></script>
-		<script src="./js/OBJLoader.js"></script>
-		<script src="./js/three_new/STLLoader.js"></script>
-		<script src="./js/OrbitControls.js"></script>
-		<script>
+	<script src="./js/three.js"></script>
+	<script src="./js/Detector.js"></script>
+	<script src="./js/OBJLoader.js"></script>
+	<script src="./js/three_new/STLLoader.js"></script>
+	<script src="./js/OrbitControls.js"></script>
+	<script>
 
-			let canvas, renderer;
+		let canvas, renderer;
 
-			const scenes = [];
+		const scenes = [];
 
-			init();
-			animate();
+		init();
+		animate();
 
-			function init() {
+		function init() {
 
-				canvas = document.getElementById( "c" );
+			canvas = document.getElementById("c");
 
-				const geometries = [
-					new THREE.BoxGeometry( 1, 1, 1 ),
-					new THREE.SphereGeometry( 0.5, 12, 8 ),
-					new THREE.DodecahedronGeometry( 0.5 ),
-					new THREE.CylinderGeometry( 0.5, 0.5, 1, 12 )
-				];
+			const geometries = [
+				new THREE.BoxGeometry(1, 1, 1),
+				new THREE.SphereGeometry(0.5, 12, 8),
+				new THREE.DodecahedronGeometry(0.5),
+				new THREE.CylinderGeometry(0.5, 0.5, 1, 12)
+			];
 
-				const content = document.getElementById( 'content' );
+			const content = document.getElementById('content');
 
-				for ( let i = 0; i < 20; i ++ ) {
-					let loader = new THREE.OBJLoader();
-					let obj_path= './MODELS/EGG_01_OBJ/'+i.toString()+'.obj';
-					loader.load( obj_path, function (object) {
-						object.scale.x = 0.5;
-						object.scale.y = 0.5;
-						object.scale.z = 0.5;
-						object.children[0].material.color.set(0xe4b89a);
-						const scene = new THREE.Scene();
-						object.rotateX(Math.PI/2*3+Math.PI/6);//绕x轴旋转π/4
+			for (let i = 0; i < 20; i++) {
+				let loader = new THREE.OBJLoader();
+				let obj_path = './MODELS/EGG_01_OBJ/' + i.toString() + '.obj';
+				loader.load(obj_path, function (object) {
+					object.scale.x = 0.5;
+					object.scale.y = 0.5;
+					object.scale.z = 0.5;
+					object.children[0].material.color.set(0xe4b89a);
+					object.children[0].material.side= THREE.DoubleSide;
+					const scene = new THREE.Scene();
+					object.rotateX(Math.PI / 2 * 3 + Math.PI / 6);//绕x轴旋转π/4
 					// make a list item
-					const element = document.createElement( 'div' );
+					const element = document.createElement('div');
 					element.className = 'list-item';
 
-					const sceneElement = document.createElement( 'div' );
-					element.appendChild( sceneElement );
+					const sceneElement = document.createElement('div');
+					element.appendChild(sceneElement);
 
-					const descriptionElement = document.createElement( 'div' );
-					descriptionElement.innerText = 'Frame ' + ( i + 1 );
-					element.appendChild( descriptionElement );
+					const descriptionElement = document.createElement('div');
+					descriptionElement.innerText = 'Frame ' + (i + 1);
+					element.appendChild(descriptionElement);
 
 					// the element that represents the area we want to render the scene
 					scene.userData.element = sceneElement;
-					content.appendChild( element );
-					
-					const camera = new THREE.PerspectiveCamera( 40, 1, 1, 10 );
-				//	const camera = new THREE.OrthographicCamera( -1, 1, -1, 1,0.001, 10 );
+					content.appendChild(element);
+
+					const camera = new THREE.PerspectiveCamera(40, 1, 1, 10);
+					//	const camera = new THREE.OrthographicCamera( -1, 1, -1, 1,0.001, 10 );
 					camera.position.z = 2;
 					scene.userData.camera = camera;
 
-					const controls = new THREE.OrbitControls( scene.userData.camera, scene.userData.element );
+					const controls = new THREE.OrbitControls(scene.userData.camera, scene.userData.element);
 					controls.minDistance = 2;
 					controls.maxDistance = 5;
 					controls.enablePan = false;
@@ -141,76 +145,76 @@
 					scene.userData.controls = controls;
 
 					// add one random mesh to each scene
-					const geometry = geometries[ geometries.length * Math.random() | 0 ];
+					const geometry = geometries[geometries.length * Math.random() | 0];
 
-					const material = new THREE.MeshStandardMaterial( {
+					const material = new THREE.MeshStandardMaterial({
 
-						color: new THREE.Color().setHSL( Math.random(), 1, 0.75 ),
+						color: new THREE.Color().setHSL(Math.random(), 1, 0.75),
 						roughness: 0.5,
 						metalness: 0,
 						flatShading: true
 
-					} );
+					});
 
-					scene.add( object );
+					scene.add(object);
 
-					scene.add( new THREE.HemisphereLight( 0xaaaaaa, 0x444444 ) );
+					scene.add(new THREE.HemisphereLight(0xaaaaaa, 0x444444));
 
-					const light = new THREE.DirectionalLight( 0xffffff, 0.5 );
-					light.position.set( 1, 1, 1 );
-					scene.add( light );
+					const light = new THREE.DirectionalLight(0xffffff, 0.5);
+					light.position.set(1, 1, 1);
+					scene.add(light);
 
-					scenes.push( scene );
+					scenes.push(scene);
 
-					})
-					
+				})
 
-				}
-
-
-				renderer = new THREE.WebGLRenderer( { canvas: canvas, antialias: true } );
-				renderer.setClearColor( 0xffffff, 1 );
-				renderer.setPixelRatio( window.devicePixelRatio );
 
 			}
 
-			function updateSize() {
 
-				const width = canvas.clientWidth;
-				const height = canvas.clientHeight;
+			renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
+			renderer.setClearColor(0xffffff, 1);
+			renderer.setPixelRatio(window.devicePixelRatio);
 
-				if ( canvas.width !== width || canvas.height !== height ) {
+		}
 
-					renderer.setSize( width, height, false );
+		function updateSize() {
 
-				}
+			const width = canvas.clientWidth;
+			const height = canvas.clientHeight;
 
-			}
+			if (canvas.width !== width || canvas.height !== height) {
 
-			function animate() {
-
-				render();
-				requestAnimationFrame( animate );
+				renderer.setSize(width, height, false);
 
 			}
 
-			function render() {
+		}
 
-				updateSize();
+		function animate() {
 
-				canvas.style.transform = `translateX(${window.scrollX}px)`;
+			render();
+			requestAnimationFrame(animate);
 
-				renderer.setClearColor( 0xffffff );
-				renderer.setScissorTest( false );
-				renderer.clear();
+		}
 
-				renderer.setClearColor( 0xe0e0e0 );
-				renderer.setScissorTest( true );
+		function render() {
 
-				scenes.forEach( function ( scene ) {
+			updateSize();
 
-					// so something moves
-					scene.children[ 0 ].rotation.z = Date.now() * 0.001;
+			canvas.style.transform = `translateX(${window.scrollX}px)`;
+
+			renderer.setClearColor(0xffffff);
+			renderer.setScissorTest(false);
+			renderer.clear();
+
+			renderer.setClearColor(0xe0e0e0);
+			renderer.setScissorTest(true);
+
+			scenes.forEach(function (scene) {
+
+				// so something moves
+				scene.children[0].rotation.z = Date.now() * 0.001;
 
 					// get the element that is a place holder for where we want to
 					// draw the scene
@@ -219,13 +223,13 @@
 					// get its position relative to the page's viewport
 					/*const*/ rect = element.getBoundingClientRect();
 
-					// check if it's offscreen. If so skip it
-					if ( rect.bottom < 0 || rect.top > renderer.domElement.clientHeight ||
-						 rect.right < 0 || rect.left > renderer.domElement.clientWidth ) {
+				// check if it's offscreen. If so skip it
+				if (rect.bottom < 0 || rect.top > renderer.domElement.clientHeight ||
+					rect.right < 0 || rect.left > renderer.domElement.clientWidth) {
 
-						return; // it's off screen
+					return; // it's off screen
 
-					}
+				}
 
 					// set the viewport
 					/*const*/ width = rect.right - rect.left;
@@ -235,23 +239,24 @@
 
 					/*const*/ bottom = rect.top;//rect.bottom-50;//renderer.domElement.clientHeight- rect.bottom;
 
-					renderer.setViewport( left, bottom, width, height );
-					renderer.setScissor( left, bottom, width, height );
+				renderer.setViewport(left, bottom, width, height);
+				renderer.setScissor(left, bottom, width, height);
 
 					/*const*/ camera = scene.userData.camera;
 
-					//camera.aspect = width / height; // not changing in this example
-					//camera.updateProjectionMatrix();
+				//camera.aspect = width / height; // not changing in this example
+				//camera.updateProjectionMatrix();
 
-					//scene.userData.controls.update();
+				//scene.userData.controls.update();
 
-					renderer.render( scene, camera );
+				renderer.render(scene, camera);
 
-				} );
+			});
 
-			}
+		}
 
-		</script>
+	</script>
 
-	</body>
+</body>
+
 </html>

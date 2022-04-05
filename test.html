@@ -1,0 +1,77 @@
+for (let i = 0; i < 30; i++) {
+    let loader = new THREE.OBJLoader();
+    let obj_path = './MODELS/CUP_01_OBJ/' + i.toString() + '.obj';
+    loader.load(obj_path, function (object) {
+        object.scale.x = 0.5;
+        object.scale.y = 0.5;
+        object.scale.z = 0.5;
+        object.children[0].material.color.set(0xe4b89a);
+        object.children[0].material.side = THREE.DoubleSide;
+        const scene = new THREE.Scene();
+        object.rotateX(Math.PI / 2 * 3 + Math.PI / 6);//绕x轴旋转π/4
+        // make a list item
+
+
+
+        const material = new THREE.MeshBasicMaterial({
+            //	color: 0xdd00ff,
+            side: THREE.DoubleSide,
+            color: new THREE.Color().setHSL(Math.random(), 1, 0.75),
+            roughness: 0.5,
+            metalness: 0,
+            flatShading: true
+
+        });
+
+        const element = document.createElement('div');
+        element.className = 'list-item';
+
+        const sceneElement = document.createElement('div');
+        element.appendChild(sceneElement);
+
+        const descriptionElement = document.createElement('div');
+        // descriptionElement.innerText = 'Frame ' + (i + 1);
+        element.appendChild(descriptionElement);
+
+        // the element that represents the area we want to render the scene
+        scene.userData.element = sceneElement;
+        content.appendChild(element);
+
+        const camera = new THREE.PerspectiveCamera(40, 1, 1, 10);
+        //	const camera = new THREE.OrthographicCamera( -1, 1, -1, 1,0.001, 10 );
+        camera.position.z = 2;
+        scene.userData.camera = camera;
+
+        const controls = new THREE.OrbitControls(scene.userData.camera, scene.userData.element);
+        controls.minDistance = 2;
+        controls.maxDistance = 5;
+        controls.enablePan = false;
+        controls.enableZoom = false;
+        scene.userData.controls = controls;
+
+        // add one random mesh to each scene
+        const geometry = geometries[ geometries.length * Math.random() | 0 ];
+
+        //		const geometry = geometries[ geometries.length * Math.random() | 0 ];
+
+        scene.add(object);
+    //	scene.add( new THREE.Mesh( geometry, material ) );
+        scene.add(new THREE.HemisphereLight(0xaaaaaa, 0x444444));
+
+        const light = new THREE.DirectionalLight(0xffffff, 0.5);
+        light.position.set(1, 1, 1);
+        scene.add(light);
+
+        scenes.push(scene);
+
+    })
+
+
+}
+
+
+renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
+renderer.setClearColor(0xffffff, 1);
+renderer.setPixelRatio(window.devicePixelRatio);
+
+}
