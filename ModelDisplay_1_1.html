@@ -106,7 +106,7 @@
 
 			const content = document.getElementById('content');
 
-			for (let i = 0; i < 30; i++) {
+			for (let i = 0; i < 20; i++) {
 				let loader = new THREE.OBJLoader();
 				let obj_path = './MODELS/CUP_01_OBJ/' + i.toString() + '.obj';
 				loader.load(obj_path, function (object) {
@@ -139,12 +139,16 @@
 					// descriptionElement.innerText = 'Frame ' + (i + 1);
 					element.appendChild(descriptionElement);
 
-
-
-					var p = document.createElement("p");
+					
+					
+					const p = document.createElement("p");
+					// p = '<label for="yes">Like</label>';
+					// p = p + '<input type="radio" name="exception" id="yes"/>';
+					// p = p + '<label for="no">Dislike</label>';
+					// p = p + '<input type="radio" name="exception" id="no"/>';
 					p.innerHTML = '<label for="yes">Like</label>';
 					p.innerHTML = p.innerHTML + '<input type="radio" name="exception" id="yes"/>';
-					p.innerHTML = p.innerHTML + '<label for="no">Unlike</label>';
+					p.innerHTML = p.innerHTML + '<label for="no">Dislike</label>';
 					p.innerHTML = p.innerHTML + '<input type="radio" name="exception" id="no"/>';
 					//////////////$p=$(p);
 					element.appendChild(p);
@@ -228,7 +232,7 @@
 			scenes.forEach(function (scene) {
 
 				// so something moves
-				scene.children[0].rotation.y = Date.now() * 0.001;
+				scene.children[0].rotation.z = Date.now() * 0.0006;
 
 				// get the element that is a place holder for where we want to
 				// draw the scene
