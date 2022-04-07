@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>获取nodeJs数据</title>
+    <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+    <script>
+        $.ajax({
+            url: "http://127.0.0.1:8888/",
+            type: "GET",
+            data: { name: '鲁班大师', iq: '250' },
+            contextType: "application/json",
+            success: function (res) {
+            },
+            error: function (err) {
+            }
+        });
+    </script>
+</head>
+
+<body>
+</body>
+
+</html>

@@ -59,14 +59,20 @@
 </head>
 
 <body>
-
+    
 	<canvas id="c"></canvas>
 
 	<div id="content">
 		<div id="info"> Model:1 Cloth:1</div>
+		<br />
+		<p>Suppose you have these models as decorations in your home.</p>
+		<p>Decide if you like each model according to your preferences.(Like & Dislike)</p>
+		<p>If you particularly like it, click the Favor button.(No more than three)</p>
+        <center><button type="button" onclick="PostToServer()">Submit!</button></center>
+        <br />
+
 	</div>
-
-
+    
 	<!-- Import maps polyfill -->
 	<!-- Remove this when import maps will be widely supported -->
 	<!-- <script async src="https://unpkg.com/es-module-shims@1.3.6/dist/es-module-shims.js"></script>
@@ -84,10 +90,15 @@
 	<script src="./js/OBJLoader.js"></script>
 	<script src="./js/three_new/STLLoader.js"></script>
 	<script src="./js/OrbitControls.js"></script>
+    <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
 	<script>
-
+		var modelnumber=15;
+		var btn1 = document.createElement("BUTTON");
+		var t1 = document.createTextNode("submit");
+		btn1.appendChild(t1);
 		let canvas, renderer;
-
+		var result = new Array(101);
+		
 		const scenes = [];
 
 		init();
@@ -95,6 +106,9 @@
 
 		function init() {
 
+			for (let i = 0; i < modelnumber; i++){
+                result[i]=-1;
+            }
 			canvas = document.getElementById("c");
 
 			const geometries = [
@@ -106,7 +120,12 @@
 
 			const content = document.getElementById('content');
 
-			for (let i = 0; i < 20; i++) {
+
+
+
+
+
+			for (let i = 0; i < modelnumber; i++) {
 				let loader = new THREE.OBJLoader();
 				let obj_path = './MODELS/CUP_01_OBJ/' + i.toString() + '.obj';
 				loader.load(obj_path, function (object) {
@@ -130,6 +149,7 @@
 					});
 
 					const element = document.createElement('div');
+                    element.setClearColor=new THREE.Color(0xff00ff, 1.0);
 					element.className = 'list-item';
 
 					const sceneElement = document.createElement('div');
@@ -140,18 +160,36 @@
 					element.appendChild(descriptionElement);
 
 					
-					
-					const p = document.createElement("p");
-					// p = '<label for="yes">Like</label>';
-					// p = p + '<input type="radio" name="exception" id="yes"/>';
-					// p = p + '<label for="no">Dislike</label>';
-					// p = p + '<input type="radio" name="exception" id="no"/>';
-					p.innerHTML = '<label for="yes">Like</label>';
-					p.innerHTML = p.innerHTML + '<input type="radio" name="exception" id="yes"/>';
-					p.innerHTML = p.innerHTML + '<label for="no">Dislike</label>';
-					p.innerHTML = p.innerHTML + '<input type="radio" name="exception" id="no"/>';
-					//////////////$p=$(p);
-					element.appendChild(p);
+					var btn_like = document.createElement("BUTTON");
+					var t_like = document.createTextNode("Like");
+                    btn_like.style.width="30%";
+				    btn_like.appendChild(t_like);
+					btn_like.id=i;
+					//btn_like.setAttribute('onclick','click_like(descriptionElement)');
+					btn_like.addEventListener('click', ()=>{
+						click_like(descriptionElement,btn_like.id);
+					});
+					element.appendChild(btn_like);
+
+					var btn_dislike = document.createElement("BUTTON");
+					var t_dislike = document.createTextNode("Dislike");
+                    btn_dislike.style.width="40%";
+					btn_dislike.appendChild(t_dislike);
+					btn_dislike.id=i;
+					btn_dislike.addEventListener('click', ()=>{
+						click_dislike(descriptionElement,btn_dislike.id);
+					});
+					element.appendChild(btn_dislike);
+
+					var btn_favor = document.createElement("BUTTON");
+					var t_favor = document.createTextNode("Favor");
+                    btn_favor.style.width="30%";
+					btn_favor.appendChild(t_favor);
+					btn_favor.id=i;
+					btn_favor.addEventListener('click', ()=>{
+						click_favorite(descriptionElement,btn_favor.id);
+					});
+					element.appendChild(btn_favor);
 
 
 					// the element that represents the area we want to render the scene
@@ -187,10 +225,9 @@
 
 				})
 
-
 			}
 			renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
-			renderer.setClearColor(0xffffff, 1);
+			
 			renderer.setPixelRatio(window.devicePixelRatio);
 
 		}
@@ -207,15 +244,48 @@
 			}
 
 		}
-
+		function click_like(t,id) {
+			t.innerText = 'Like';
+			result[id]=1;
+			console.log(result);
+		}
+		function click_dislike(t,id) {
+			t.innerText = 'Disike';
+			result[id]=2;
+			console.log(result);
+		}
+		function click_favorite(t,id) {
+			t.innerText = 'Favor';
+			result[id]=3;
+			console.log(result);
+		}
 		function animate() {
-
 			render();
 			requestAnimationFrame(animate);
-
 		}
 
+        function PostToServer() {
+			for (let i = 0; i < modelnumber; i++){
+                if(result[i]==-1){
+					alert("You haven't finished all the questions yet.");
+					return ;
+				}
+            }
+            $.ajax({
+                url: "http://127.0.0.1:8888/",
+                type: "GET",
+                data: { name: 'M1-C1', iq: result },
+                    contextType: "application/json",
+                    success: function (res) {
+						
+                    },
+                    error: function (err) {
+                    }
+            });
+			alert("Thank you for your submission.");
+        }
 
+		
 		function render() {
 
 			updateSize();
@@ -233,7 +303,7 @@
 
 				// so something moves
 				scene.children[0].rotation.z = Date.now() * 0.0006;
-
+                //scene.setClearColor(0xffffff, 1);
 				// get the element that is a place holder for where we want to
 				// draw the scene
 				const element = scene.userData.element;
@@ -244,7 +314,6 @@
 				// check if it's offscreen. If so skip it
 				if (rect.bottom < 0 || rect.top > renderer.domElement.clientHeight ||
 					rect.right < 0 || rect.left > renderer.domElement.clientWidth) {
-
 					return; // it's off screen
 
 				}
@@ -257,7 +326,7 @@
 
 				renderer.setViewport(left, bottom, width, height);
 				renderer.setScissor(left, bottom, width, height);
-
+             
 				const camera = scene.userData.camera;
 
 				//camera.aspect = width / height; // not changing in this example
@@ -270,6 +339,7 @@
 			});
 		}
 	</script>
+
 
 </body>
 
