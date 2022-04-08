@@ -66,8 +66,8 @@
 		<div id="info"> Model:1 Cloth:1</div>
 		<br />
 		<p>Suppose you have these models as decorations in your home.</p>
-		<p>Decide if you like each model according to your preferences.(Like & Dislike)</p>
-		<p>If you particularly like it, click the Favor button.(No more than three)</p>
+		<p>Decide if you like each model according to your preferences. (Like & Dislike)</p>
+		<p>If you particularly like it, click the Favor button. (No more than three)</p>
         <center><button type="button" onclick="PostToServer()">Submit!</button></center>
         <br />
 
@@ -92,7 +92,7 @@
 	<script src="./js/OrbitControls.js"></script>
     <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
 	<script>
-		var modelnumber=15;
+		var modelnumber=5;
 		var btn1 = document.createElement("BUTTON");
 		var t1 = document.createTextNode("submit");
 		btn1.appendChild(t1);
@@ -272,7 +272,7 @@
 				}
             }
             $.ajax({
-                url: "http://127.0.0.1:8888/",
+                url: "42.192.68.246:4000/",
                 type: "GET",
                 data: { name: 'M1-C1', iq: result },
                     contextType: "application/json",
